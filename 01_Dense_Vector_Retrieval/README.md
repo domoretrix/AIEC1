@@ -1,15 +1,11 @@
-<p align = "center" draggable="false" ><img src="https://github.com/AI-Maker-Space/LLM-Dev-101/assets/37101144/d1343317-fa2f-41e1-8af1-1dbb18399719"
-     width="200px"
-     height="auto"/>
-</p>
-
-<h1 align="center" id="heading">Session 1: Dense Vector Retrieval</h1>
+# Session 1: Dense Vector Retrieval
 
 ### [Quicklinks]()
 
-| 📰 Module Sheet                                                                 | ⏺️ Recording | 🖼️ Slides | 👨‍💻 Repo       | 📝 Homework | 📁 Feedback |
-| :------------------------------------------------------------------------------- | :----------- | :-------- | :------------ | :---------- | :---------- |
-| [Dense Vector Retrieval](../00_Docs/Modules/01_Dense_Vector_Retrieval/README.md) |[Recording!](https://us02web.zoom.us/rec/share/sHWvo0Nd1aI0SEhKecOLEX9kFGVJJAdYfsKiuTmm8t85W48Z2lnjpnzTy8jAd8R5.PwuqibGwAZhvDd8c) <br> passcode: `C62n^@Q!`| [Session 1 Slides](https://canva.link/htfqf8i39yejyhn) | You are here! | [Session 1 Assignment](https://forms.gle/Z9qskfVaAvPjn6gz8) | [Feedback 6/2](https://forms.gle/21a2uoL9DVZPwgJP6) |
+
+| 📰 Module Sheet                                                                  | ⏺️ Recording                                                                                                                                           | 🖼️ Slides                                             | 👨‍💻 Repo    | 📝 Homework                                                 | 📁 Feedback                                         |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------ | ------------- | ----------------------------------------------------------- | --------------------------------------------------- |
+| [Dense Vector Retrieval](../00_Docs/Modules/01_Dense_Vector_Retrieval/README.md) | [Recording!](https://us02web.zoom.us/rec/share/sHWvo0Nd1aI0SEhKecOLEX9kFGVJJAdYfsKiuTmm8t85W48Z2lnjpnzTy8jAd8R5.PwuqibGwAZhvDd8c) passcode: `C62n^@Q!` | [Session 1 Slides](https://canva.link/htfqf8i39yejyhn) | You are here! | [Session 1 Assignment](https://forms.gle/Z9qskfVaAvPjn6gz8) | [Feedback 6/2](https://forms.gle/21a2uoL9DVZPwgJP6) |
 
 
 ## 🏗️ How AIM Does Assignments
@@ -19,9 +15,7 @@
 Each assignment will have a few of the following categories of exercises:
 
 - ❓ **Questions** - these will be questions that you will be expected to gather the answer to. These can appear as general questions, or questions meant to spark a discussion in your breakout rooms.
-
 - 🏗️ **Activities** - these will be work or coding activities meant to reinforce specific concepts or theory components.
-
 - 🚧 **Advanced Builds (optional)** - Take on a challenge. These builds require you to create something with minimal guidance outside of the documentation.
 
 ## Main Assignment
@@ -67,7 +61,7 @@ You will compare embeddings for terms like:
 
 Why is cosine similarity useful for dense vector retrieval?
 
-##### ✅ Answer:
+##### ✅ Answer: Cosine similarity is useful for dense vector retrieval because it computes how close are 2 vectors in a hyperdimensional space. Hence, you can use it to compare a given prompt embedding against all possible candidates embeddings and retrieve the result(s) with the highest meaning (highest cosine similarity).
 
 ---
 
@@ -86,7 +80,9 @@ Run the notebook sections that:
 
 Why is metadata important for a RAG application?
 
-##### ✅ Answer:
+##### ✅ Answer: The metadata contains the human readable text chunk that is embedded. Upon retrieval you can reference this text and bring it in your reasoning context.
+
+##### You can also use metadata to improve search resolution by storing a key like subject or topic, to filter documents prior to cosine similarity computation, and therefore reducing cost and increasing search speed.
 
 #### ❓Question #3
 
@@ -94,11 +90,15 @@ What tradeoff do we make when choosing chunk size and chunk overlap?
 
 ##### ✅ Answer:
 
+##### A higher chunk size will lead to a higher generalization of the text embedded as more information will have to represented in a similar dimensionality vector as smaller prompt embedding vector would, hence we'd lose some precision in retrieval. A lower chunk size however has the risk of missing out on context that may or may not end up as meaningful for our problem.
+
+##### A higher chunk overlap will allow for more granular disections of the text. At the same time will create lots of redundancies in the retrieved text because the overlapping text will be brought over more than once.
+
 #### ❓Question #4
 
 What does a similarity score help you understand, and what does it not prove by itself?
 
-##### ✅ Answer:
+##### ✅ Answer: A similarity score helps you understand how close in a hyperdimensional space are the representational embeddings of 2 words or chunks of text, and in theory how close these 2 words are in meaning. The similarity score by itself however, does not prove absolute contextual relevance and therefore it would need to be compared against all carthesian product (prompt * chunks) resulting scores to retrieve the closest meaning.
 
 ---
 
@@ -113,7 +113,7 @@ Run the notebook's vibe check queries and inspect both:
 
 For the vibe check queries, did the retrieved context seem relevant before generation? Why or why not?
 
-##### ✅ Answer:
+##### ✅ Answer: The first few sources are quite relavant, at least the first question, where the question is relevant to the data pdf it's answering from. However, in cases, where the prompt is irrelevan to the content in the data we're querying from, like the taxes question, even the first retrieved sources are not relevant.
 
 ---
 
@@ -130,13 +130,21 @@ Document what changed and whether retrieval improved.
 
 ##### Settings Changed:
 
--
+Carthesian product combination of:
+
+- Chunk size
+- Chunk overlap
+- Retrieval `k`
 
 ##### Results:
 
-1.
-2.
-3.
+##### Chunk size seems to be the most impactful setting over the quality of the answer. In any combination with low/high overlap and low/high k value, the marginal difference is small. A small chunk size brings poor answer results in any combination of overlap and k value.
+
+##### k is the next most impactful setting when the chunk size is medium and above. A lower k will narrow down the context and the answer is less verbose and straight to the point. On the other hand, a high k value will create a more verbose answer.
+
+##### The overlap makes the most impact when the chunk size is medium to high and the k value is medium and low. In this case, selecting a higher overlap improves the answer by bringing in more relevant chunk selections as the same text is dissected in higher granularities.
+
+##### Overall, I find the quality of the retrieved chunks to be the best when the chunk size is at least medium (1000) with at least a 20% overlap and a smaller k value (in this case 1-5).
 
 ---
 
@@ -172,9 +180,9 @@ git pull upstream main
 git push origin main
 ```
 
-2. Start Cursor from the `01_Dense_Vector_Retrieval` folder.
-3. Complete the notebook.
-4. Answer the questions in this `README.md`.
-5. Add, commit, and push your modified work to your origin repository.
+1. Start Cursor from the `01_Dense_Vector_Retrieval` folder.
+2. Complete the notebook.
+3. Answer the questions in this `README.md`.
+4. Add, commit, and push your modified work to your origin repository.
 
 When submitting your homework, provide the GitHub URL to your AIE9 repo.
