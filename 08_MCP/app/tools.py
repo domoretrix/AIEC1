@@ -104,6 +104,37 @@ async def view_cart() -> dict:
 
 
 @mcp.tool()
+async def cart_summary_by_category() -> dict:
+    """Return total item count and subtotal per product category for your cart."""
+    username = await _get_username()
+    db = await oauth_provider._get_db()
+    cursor = await db.execute(
+        """SELECT p.category,
+                  SUM(c.quantity) AS item_count,
+                  SUM(p.price * c.quantity) AS subtotal
+           FROM cart_items c JOIN products p ON c.product_id = p.id
+           WHERE c.username = ?
+           GROUP BY p.category
+           ORDER BY p.category""",
+        (username,),
+    )
+    rows = await cursor.fetchall()
+    categories = [
+        {
+            "category": r[0],
+            "item_count": r[1],
+            "subtotal": round(r[2], 2),
+        }
+        for r in rows
+    ]
+    return {
+        "categories": categories,
+        "total_items": sum(c["item_count"] for c in categories),
+        "total": round(sum(c["subtotal"] for c in categories), 2),
+    }
+
+
+@mcp.tool()
 async def remove_from_cart(product_id: int) -> dict:
     """Remove a product from your shopping cart."""
     username = await _get_username()

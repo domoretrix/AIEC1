@@ -155,7 +155,7 @@ Why is OAuth important for MCP servers, and what security considerations should 
 
 #### Answer
 
-_(insert your answer here)_
+_OAuth is important for the MCP servers because just like any other application authentification it gives a method to authenticate in order to estabilish security, permission and privacy boundaries. When exposing tools to AI clients you should consider that the tools do not expose other users' information/secrets and that they do not changes other users' settings._
 
 ### Question #2
 
@@ -163,7 +163,7 @@ What is Streamable HTTP transport in MCP, and why might you expose a server publ
 
 #### Answer
 
-_(insert your answer here)_
+_Streamable HTTP transport in MCP is a transport method over the network where the updates from the LLM are returned as they are generated rather than waiting for agent completion and returning the answer as a whole. You want to expose a server publicly with OAuth instead of using a local stdio connection when you want to make your MCP server available to other networks rather than just to your own local network. This way, other uses will be able to use it as well._
 
 ## Activity 1: Extend the MCP Server
 
